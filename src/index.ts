@@ -7,10 +7,7 @@ const app = express();
 const port = 3000;
 
 app.use(express.json()); // Middleware to parse JSON bodies
-
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello, World!');
-});
+app.use(express.static('public'));
 
 app.post('/clone', async (req: Request, res: Response) => {
     const { repoUrl } = req.body;

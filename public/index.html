@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EchoDocs - Automated API Documentation</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>EchoDocs</h1>
+            <p>Generate API documentation and mock servers instantly.</p>
+        </header>
+        <main>
+            <form id="repo-form">
+                <input type="text" id="repo-url" placeholder="Enter a GitHub repository URL" required>
+                <button type="submit">Generate Docs</button>
+            </form>
+            <div id="loader" class="hidden"></div>
+            <div id="error-message" class="hidden"></div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
