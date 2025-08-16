@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express, { Request, Response } from "express";
 import simpleGit from "simple-git";
 import path from "path";
@@ -11,7 +12,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // Initialize Gemini AI with API key from environment
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
