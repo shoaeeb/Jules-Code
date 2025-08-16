@@ -2,11 +2,11 @@
   "name": "echodocs",
   "version": "1.0.0",
   "description": "Automated documentation and API builder",
-  "main": "src/index.ts",
+  "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "start": "node --loader ts-node/esm src/index.ts",
-    "build": "echo 'Build not needed for ts-node'",
+    "start": "node dist/index.js",
+    "build": "mkdir -p dist && cp src/index.ts dist/index.js && cp -r public dist/",
     "test": "jest"
   },
   "keywords": [],
