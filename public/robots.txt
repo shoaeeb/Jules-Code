@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+Allow: /docs/*
+
+Sitemap: https://echodocs.onrender.com/sitemap.xml
+
+# Allow crawling of documentation pages
+Allow: /repos
+Allow: /parse
+Allow: /clone
+
+# Disallow private or sensitive endpoints
+Disallow: /save-content
+Disallow: /mock/*

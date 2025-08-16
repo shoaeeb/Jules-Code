@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "Automated documentation and API builder",
   "main": "dist/index.js",
+  "type": "module",
   "scripts": {
-    "start": "npx ts-node src/index.ts",
+    "start": "node --loader ts-node/esm src/index.ts",
     "build": "tsc",
     "test": "jest"
   },
@@ -12,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@ts-docs/extractor": "^3.1.1",
     "express": "^5.1.0",
     "simple-git": "^3.28.0"
@@ -23,5 +25,8 @@
     "ts-jest": "^29.0.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.3"
+  },
+  "ts-node": {
+    "esm": true
   }
 }

@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EchoDocs - AI-Powered API Documentation Generator</title>
+    <meta name="description" content="Generate comprehensive API documentation automatically using AI. Clone any GitHub repository and create beautiful, detailed documentation for 14+ programming languages.">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            overflow-x: hidden;
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, #fff, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: white;
+            color: #667eea;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+        
+        .features {
+            padding: 5rem 0;
+            background: #f8fafc;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            text-align: center;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 1rem;
+        }
+        
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #64748b;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .languages {
+            padding: 5rem 0;
+            background: white;
+        }
+        
+        .languages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+        
+        .language-item {
+            text-align: center;
+            padding: 1rem;
+            border-radius: 10px;
+            background: #f1f5f9;
+            transition: all 0.3s ease;
+        }
+        
+        .language-item:hover {
+            background: #e2e8f0;
+            transform: scale(1.05);
+        }
+        
+        .language-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .demo {
+            padding: 5rem 0;
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            color: white;
+        }
+        
+        .demo-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+        
+        .demo-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .demo-steps {
+            list-style: none;
+            margin-top: 2rem;
+        }
+        
+        .demo-steps li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-weight: 600;
+        }
+        
+        .demo-visual {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        .code-preview {
+            background: #0f172a;
+            border-radius: 10px;
+            padding: 1.5rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+        
+        .footer {
+            background: #0f172a;
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            color: #667eea;
+        }
+        
+        .footer-section a {
+            color: #94a3b8;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-section a:hover {
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .demo-container { grid-template-columns: 1fr; }
+            .container { padding: 0 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>EchoDocs</h1>
+                <p>Transform any codebase into beautiful, comprehensive documentation using the power of AI. Support for 14+ programming languages with intelligent analysis and automatic generation.</p>
+                <a href="/app" class="cta-button">
+                    <i class="fas fa-rocket"></i> Start Generating Docs
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">Powerful Features</h2>
+            <p class="section-subtitle">Everything you need to create professional documentation automatically</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>AI-Powered Analysis</h3>
+                    <p>Advanced AI analyzes your code structure, functions, and APIs to generate accurate, detailed documentation automatically.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-code-branch"></i>
+                    </div>
+                    <h3>GitHub Integration</h3>
+                    <p>Simply paste any GitHub repository URL and let EchoDocs clone, analyze, and document your project in minutes.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <h3>Beautiful Output</h3>
+                    <p>Generate stunning, professional documentation with modern styling, syntax highlighting, and responsive design.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-language"></i>
+                    </div>
+                    <h3>Multi-Language Support</h3>
+                    <p>Support for TypeScript, JavaScript, Python, Java, Go, Rust, C++, PHP, Ruby, Swift, Kotlin, Scala, and more.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-edit"></i>
+                    </div>
+                    <h3>Editable Content</h3>
+                    <p>Add your own notes, examples, and explanations to complement the AI-generated documentation.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Lightning Fast</h3>
+                    <p>Generate comprehensive documentation in seconds, not hours. Perfect for rapid development cycles.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Supported Languages -->
+    <section class="languages">
+        <div class="container">
+            <h2 class="section-title">Supported Languages</h2>
+            <p class="section-subtitle">EchoDocs understands and documents code in multiple programming languages</p>
+            
+            <div class="languages-grid">
+                <div class="language-item">
+                    <div class="language-icon">🟦</div>
+                    <div>TypeScript</div>
+                </div>
+                <div class="language-item">
+                    <div class="language-icon">🟨</div>
+                    <div>JavaScript</div>
+                </div>
+                <div class="language-item">
+                    <div class="language-icon">🐍</div>
+                    <div>Python</div>
+                </div>
+                <div class="language-item">
+                    <div class="language-icon">☕</div>
+                    <div>Java</div>
+                </div>
+                <div class="language-item">
+                    <div class="language-icon">🔷</div>
+                    <div>Go</div>
+                </div>
+                <div class="language-item">
+                    <div class="language-icon">🦀</div>
+                    <div>Rust</div>
+                </div>
+                <div class="language-item">
+                    <div class="language-icon">⚡</div>
+                    <div>C++</div>
+                </div>
+                <div class="language-item">
+                    <div class="language-icon">🔵</div>
+                    <div>C#</div>
+                </div>
+                <div class="language-item">
+                    <div class="language-icon">🐘</div>
+                    <div>PHP</div>
+                </div>
+                <div class="language-item">
+                    <div class="language-icon">💎</div>
+                    <div>Ruby</div>
+                </div>
+                <div class="language-item">
+                    <div class="language-icon">🍎</div>
+                    <div>Swift</div>
+                </div>
+                <div class="language-item">
+                    <div class="language-icon">🎯</div>
+                    <div>Kotlin</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section class="demo">
+        <div class="container">
+            <div class="demo-container">
+                <div class="demo-content">
+                    <h2>How It Works</h2>
+                    <p>Generate professional documentation in just a few simple steps</p>
+                    
+                    <ol class="demo-steps">
+                        <li>
+                            <span class="step-number">1</span>
+                            Paste your GitHub repository URL
+                        </li>
+                        <li>
+                            <span class="step-number">2</span>
+                            EchoDocs clones and analyzes your code
+                        </li>
+                        <li>
+                            <span class="step-number">3</span>
+                            AI generates comprehensive documentation
+                        </li>
+                        <li>
+                            <span class="step-number">4</span>
+                            Review, edit, and share your docs
+                        </li>
+                    </ol>
+                    
+                    <a href="/app" class="cta-button" style="margin-top: 2rem;">
+                        Try It Now <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                
+                <div class="demo-visual">
+                    <div class="code-preview">
+<span style="color: #7c3aed;">// Example generated documentation</span>
+<span style="color: #10b981;">export</span> <span style="color: #3b82f6;">function</span> <span style="color: #f59e0b;">createUser</span>(<span style="color: #ef4444;">userData</span>: <span style="color: #8b5cf6;">UserData</span>) {
+  <span style="color: #7c3aed;">// Creates a new user with validation</span>
+  <span style="color: #10b981;">return</span> <span style="color: #f59e0b;">validateAndSave</span>(<span style="color: #ef4444;">userData</span>);
+}
+
+<span style="color: #7c3aed;">/**
+ * AI-Generated Documentation:
+ * 
+ * Creates a new user account with automatic
+ * validation and database persistence.
+ * 
+ * @param userData - User information object
+ * @returns Promise<User> - Created user
+ */</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>EchoDocs</h3>
+                    <p>AI-powered documentation generation for modern developers. Transform any codebase into beautiful, comprehensive documentation.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Features</h3>
+                    <a href="#features">AI Analysis</a>
+                    <a href="#features">Multi-Language Support</a>
+                    <a href="#features">GitHub Integration</a>
+                    <a href="#features">Beautiful Output</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <a href="/app">Documentation Generator</a>
+                    <a href="#demo">How It Works</a>
+                    <a href="#languages">Supported Languages</a>
+                </div>
+            </div>
+            
+            <div style="border-top: 1px solid #334155; padding-top: 2rem; margin-top: 2rem;">
+                <p>&copy; 2024 EchoDocs. AI-powered documentation generation for developers.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

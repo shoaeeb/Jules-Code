@@ -1,26 +1,655 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EchoDocs - Automated API Documentation</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="container">
-        <header>
-            <h1>EchoDocs</h1>
-            <p>Generate API documentation and mock servers instantly.</p>
-        </header>
-        <main>
-            <form id="repo-form">
-                <input type="text" id="repo-url" placeholder="Enter a GitHub repository URL" required>
-                <button type="submit">Generate Docs</button>
-            </form>
-            <div id="loader" class="hidden"></div>
-            <div id="error-message" class="hidden"></div>
-        </main>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      EchoDocs - AI-Powered API Documentation Generator | Auto-Generate Code
+      Docs
+    </title>
+    <meta
+      name="description"
+      content="Generate comprehensive API documentation automatically using AI. Clone any GitHub repository and create beautiful, detailed documentation for TypeScript, JavaScript, Python, Java, and more programming languages."
+    />
+    <meta
+      name="keywords"
+      content="API documentation, code documentation, AI documentation generator, GitHub documentation, TypeScript docs, JavaScript docs, Python docs, automated documentation, code analysis, developer tools"
+    />
+    <meta name="author" content="EchoDocs" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://echodocs.onrender.com/" />
+    <meta
+      property="og:title"
+      content="EchoDocs - AI-Powered API Documentation Generator"
+    />
+    <meta
+      property="og:description"
+      content="Generate comprehensive API documentation automatically using AI. Clone any GitHub repository and create beautiful, detailed documentation."
+    />
+    <meta
+      property="og:image"
+      content="https://echodocs.onrender.com/og-image.png"
+    />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://echodocs.onrender.com/" />
+    <meta
+      property="twitter:title"
+      content="EchoDocs - AI-Powered API Documentation Generator"
+    />
+    <meta
+      property="twitter:description"
+      content="Generate comprehensive API documentation automatically using AI. Clone any GitHub repository and create beautiful, detailed documentation."
+    />
+    <meta
+      property="twitter:image"
+      content="https://echodocs.onrender.com/og-image.png"
+    />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://echodocs.onrender.com/" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        color: #1a202c;
+        line-height: 1.6;
+      }
+
+      .app-container {
+        min-height: 100vh;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 3rem;
+        color: white;
+      }
+
+      .header h1 {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        background: linear-gradient(45deg, #fff, #e2e8f0);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .header p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .main-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        width: 100%;
+      }
+
+      .workflow-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .workflow-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+      }
+
+      .workflow-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+      }
+
+      .card-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .card-icon {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        margin-right: 1rem;
+      }
+
+      .card-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #2d3748;
+      }
+
+      .input-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .input-label {
+        display: block;
+        font-weight: 500;
+        color: #4a5568;
+        margin-bottom: 0.5rem;
+      }
+
+      .modern-input {
+        width: 100%;
+        padding: 1rem 1.5rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: white;
+      }
+
+      .modern-input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      .modern-button {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        width: 100%;
+        justify-content: center;
+      }
+
+      .modern-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+      }
+
+      .modern-button:active {
+        transform: translateY(0);
+      }
+
+      .secondary-button {
+        background: rgba(102, 126, 234, 0.1);
+        color: #667eea;
+        border: 2px solid #667eea;
+      }
+
+      .secondary-button:hover {
+        background: #667eea;
+        color: white;
+      }
+
+      .result {
+        margin-top: 1rem;
+        padding: 1rem;
+        border-radius: 12px;
+        font-weight: 500;
+        display: none;
+      }
+
+      .success {
+        background: linear-gradient(135deg, #48bb78, #38a169);
+        color: white;
+      }
+
+      .error {
+        background: linear-gradient(135deg, #f56565, #e53e3e);
+        color: white;
+      }
+
+      .repo-item {
+        background: rgba(102, 126, 234, 0.05);
+        border: 2px solid rgba(102, 126, 234, 0.1);
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.3s ease;
+      }
+
+      .repo-item:hover {
+        background: rgba(102, 126, 234, 0.1);
+        border-color: rgba(102, 126, 234, 0.2);
+      }
+
+      .repo-name {
+        font-weight: 600;
+        color: #2d3748;
+      }
+
+      .repo-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .small-button {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+
+      .select-btn {
+        background: #667eea;
+        color: white;
+      }
+
+      .docs-btn {
+        background: #48bb78;
+        color: white;
+      }
+
+      .small-button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 2rem;
+        color: #718096;
+        font-style: italic;
+      }
+
+      .loading {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 1s ease-in-out infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .footer {
+        margin-top: 3rem;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.8);
+        padding: 2rem;
+      }
+
+      .footer p {
+        margin-bottom: 0.5rem;
+      }
+
+      @media (max-width: 768px) {
+        .app-container {
+          padding: 1rem;
+        }
+        .header h1 {
+          font-size: 2rem;
+        }
+        .workflow-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-container">
+      <header class="header">
+        <h1><i class="fas fa-robot"></i> EchoDocs</h1>
+        <p>
+          AI-Powered Documentation Generator - Transform any codebase into
+          beautiful, comprehensive documentation
+        </p>
+      </header>
+
+      <main class="main-content">
+        <div class="workflow-grid">
+          <!-- Clone Repository Card -->
+          <div class="workflow-card">
+            <div class="card-header">
+              <div class="card-icon">
+                <i class="fab fa-github"></i>
+              </div>
+              <h2 class="card-title">Clone Repository</h2>
+            </div>
+
+            <div class="input-group">
+              <label class="input-label">GitHub Repository URL</label>
+              <input
+                type="text"
+                id="repoUrl"
+                class="modern-input"
+                placeholder="https://github.com/username/repository.git"
+              />
+            </div>
+
+            <button onclick="cloneRepo()" class="modern-button">
+              <i class="fas fa-download"></i>
+              Clone Repository
+            </button>
+
+            <div id="cloneResult" class="result"></div>
+          </div>
+
+          <!-- Available Repositories Card -->
+          <div class="workflow-card">
+            <div class="card-header">
+              <div class="card-icon">
+                <i class="fas fa-folder-open"></i>
+              </div>
+              <h2 class="card-title">Available Repositories</h2>
+            </div>
+
+            <div id="reposList" class="empty-state">
+              <i class="fas fa-inbox"></i>
+              <p>No repositories cloned yet</p>
+            </div>
+
+            <button
+              onclick="loadRepos()"
+              class="modern-button secondary-button"
+            >
+              <i class="fas fa-sync-alt"></i>
+              Refresh List
+            </button>
+          </div>
+
+          <!-- Parse Repository Card -->
+          <div class="workflow-card">
+            <div class="card-header">
+              <div class="card-icon">
+                <i class="fas fa-cogs"></i>
+              </div>
+              <h2 class="card-title">Parse Repository</h2>
+            </div>
+
+            <div class="input-group">
+              <label class="input-label">Repository Name</label>
+              <input
+                type="text"
+                id="repoName"
+                class="modern-input"
+                placeholder="Select or enter repository name"
+              />
+            </div>
+
+            <button onclick="parseRepo()" class="modern-button">
+              <i class="fas fa-search"></i>
+              Analyze Code
+            </button>
+
+            <div id="parseResult" class="result"></div>
+          </div>
+
+          <!-- Generate Documentation Card -->
+          <div class="workflow-card">
+            <div class="card-header">
+              <div class="card-icon">
+                <i class="fas fa-file-alt"></i>
+              </div>
+              <h2 class="card-title">Generate Documentation</h2>
+            </div>
+
+            <div class="input-group">
+              <label class="input-label">Repository Name</label>
+              <input
+                type="text"
+                id="docsRepoName"
+                class="modern-input"
+                placeholder="Select or enter repository name"
+              />
+            </div>
+
+            <button onclick="viewDocs()" class="modern-button">
+              <i class="fas fa-magic"></i>
+              Generate Docs
+            </button>
+          </div>
+        </div>
+      </main>
+
+      <footer class="footer">
+        <p>
+          <i class="fas fa-heart" style="color: #f56565"></i> Built by
+          Annonymous Dev • Supporting 14+ Programming Languages
+        </p>
+        <p>
+          TypeScript • JavaScript • Python • Java • Go • Rust • C++ • C# • PHP •
+          Ruby • Swift • Kotlin • Scala
+        </p>
+      </footer>
     </div>
-    <script src="script.js"></script>
-</body>
+
+    <script>
+      async function loadRepos() {
+        const reposList = document.getElementById("reposList");
+        reposList.innerHTML = '<div class="loading"></div>';
+
+        try {
+          const response = await fetch("/repos");
+          const repos = await response.json();
+
+          if (repos.length === 0) {
+            reposList.innerHTML =
+              '<div class="empty-state"><i class="fas fa-inbox"></i><p>No repositories cloned yet</p></div>';
+          } else {
+            reposList.innerHTML = repos
+              .map(
+                (repo) =>
+                  `<div class="repo-item">
+                            <div class="repo-name"><i class="fab fa-git-alt"></i> ${repo}</div>
+                            <div class="repo-actions">
+                                <button onclick="selectRepo('${repo}')" class="small-button select-btn">
+                                    <i class="fas fa-check"></i> Select
+                                </button>
+                                <button onclick="viewDocs('${repo}')" class="small-button docs-btn">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                            </div>
+                        </div>`
+              )
+              .join("");
+          }
+        } catch (error) {
+          reposList.innerHTML =
+            '<div class="empty-state" style="color: #f56565;"><i class="fas fa-exclamation-triangle"></i><p>Error loading repositories</p></div>';
+        }
+      }
+
+      function selectRepo(repoName) {
+        document.getElementById("repoName").value = repoName;
+        document.getElementById("docsRepoName").value = repoName;
+      }
+
+      async function cloneRepo() {
+        const repoUrl = document.getElementById("repoUrl").value;
+        const button = event.target;
+        const originalText = button.innerHTML;
+
+        if (!repoUrl) {
+          showResult(
+            "cloneResult",
+            '<i class="fas fa-exclamation-circle"></i> Please enter a repository URL',
+            "error"
+          );
+          return;
+        }
+
+        if (
+          !repoUrl.includes("github.com") &&
+          !repoUrl.includes("gitlab.com") &&
+          !repoUrl.includes(".git")
+        ) {
+          showResult(
+            "cloneResult",
+            '<i class="fas fa-exclamation-circle"></i> Please enter a valid Git repository URL',
+            "error"
+          );
+          return;
+        }
+
+        button.innerHTML = '<div class="loading"></div> Cloning...';
+        button.disabled = true;
+
+        try {
+          const response = await fetch("/clone", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ repoUrl }),
+          });
+
+          const result = await response.text();
+          if (response.ok) {
+            showResult(
+              "cloneResult",
+              '<i class="fas fa-check-circle"></i> Repository cloned successfully!',
+              "success"
+            );
+            const repoName =
+              repoUrl.split("/").pop()?.replace(".git", "") || "";
+            document.getElementById("repoName").value = repoName;
+            document.getElementById("docsRepoName").value = repoName;
+            document.getElementById("repoUrl").value = "";
+            loadRepos();
+          } else {
+            let errorMsg = '<i class="fas fa-times-circle"></i> ';
+            if (result.includes("already exists")) {
+              errorMsg += "Repository already exists locally";
+            } else if (result.includes("not found") || result.includes("404")) {
+              errorMsg += "Repository not found or is private";
+            } else {
+              errorMsg += "Failed to clone repository";
+            }
+            showResult("cloneResult", errorMsg, "error");
+          }
+        } catch (error) {
+          showResult(
+            "cloneResult",
+            '<i class="fas fa-wifi"></i> Network error occurred',
+            "error"
+          );
+        } finally {
+          button.innerHTML = originalText;
+          button.disabled = false;
+        }
+      }
+
+      async function parseRepo() {
+        const repoName = document.getElementById("repoName").value;
+
+        if (!repoName) {
+          showResult(
+            "parseResult",
+            "Please enter a repository name or select from available repositories",
+            "error"
+          );
+          return;
+        }
+
+        try {
+          const response = await fetch("/parse", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ repoName }),
+          });
+
+          const result = await response.json();
+          if (response.ok) {
+            showResult(
+              "parseResult",
+              `Repository parsed successfully. Found ${
+                result.modules ? result.modules.length : 0
+              } code files.`,
+              "success"
+            );
+          } else {
+            let errorMsg = result.error || "Unknown error";
+            if (result.details && result.details.includes("ENOENT")) {
+              errorMsg = `Repository "${repoName}" not found locally. Please clone it first or check the name.`;
+            } else if (
+              result.details &&
+              result.details.includes("no such file")
+            ) {
+              errorMsg = `Repository "${repoName}" exists but contains no supported code files to parse.`;
+            }
+            showResult("parseResult", errorMsg, "error");
+          }
+        } catch (error) {
+          showResult("parseResult", "Network error: " + error.message, "error");
+        }
+      }
+
+      function viewDocs(repoName) {
+        const name = repoName || document.getElementById("docsRepoName").value;
+
+        if (!name) {
+          alert(
+            "Please enter a repository name or select from available repositories"
+          );
+          return;
+        }
+
+        window.open(`/docs/${name}`, "_blank");
+      }
+
+      // Load repositories on page load
+      window.onload = function () {
+        loadRepos();
+      };
+
+      function showResult(elementId, message, type) {
+        const element = document.getElementById(elementId);
+        element.textContent = message;
+        element.className = `result ${type}`;
+        element.style.display = "block";
+      }
+    </script>
+  </body>
 </html>
