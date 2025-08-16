@@ -2,11 +2,11 @@
   "name": "echodocs",
   "version": "1.0.0",
   "description": "Automated documentation and API builder",
-  "main": "dist/index.js",
+  "main": "src/dist/index.js",
   "type": "module",
   "scripts": {
-    "start": "node dist/index.js",
-    "build": "mkdir -p dist && cp src/index.ts dist/index.js && cp -r public dist/",
+    "start": "node src/dist/index.js",
+    "build": "node -e \"const fs=require('fs');const path=require('path');if(!fs.existsSync('src/dist'))fs.mkdirSync('src/dist',{recursive:true});fs.copyFileSync('src/index.ts','src/dist/index.js');fs.cpSync('public','src/dist/public',{recursive:true});\"",
     "test": "jest"
   },
   "keywords": [],
