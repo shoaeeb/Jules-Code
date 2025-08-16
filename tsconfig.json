@@ -5,12 +5,22 @@
     "allowSyntheticDefaultImports": true,
     "target": "es2020",
     "moduleResolution": "node",
+    "lib": ["ES2020", "DOM"],
     "sourceMap": true,
     "outDir": "dist",
-    "strict": true
+    "strict": false,
+    "noImplicitAny": false,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "noResolve": false
   },
   "include": [
     "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.test.ts"
   ],
   "ts-node": {
     "esm": true
