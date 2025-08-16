@@ -13,8 +13,8 @@ const __dirname = dirname(__filename);
 const app = express();
 const port = 3000;
 
-// Initialize Gemini AI with your API key
-const genAI = new GoogleGenerativeAI("AIzaSyDSdJX7Jyn7eiPL7FT5g9f9MopBNIPCUu0");
+// Initialize Gemini AI with API key from environment
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
 app.use(express.json());
 app.use(express.static("public"));
